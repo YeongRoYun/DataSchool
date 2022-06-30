@@ -12,3 +12,7 @@ by Data Campus
 
 #### 06.29
 - OOP와 Decorator
+
+#### 06.30
+- Numpy와 PIL
+- Descriptor
