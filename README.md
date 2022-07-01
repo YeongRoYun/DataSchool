@@ -16,3 +16,7 @@ by Data Campus
 #### 06.30
 - Numpy와 PIL
 - Descriptor
+
+#### 07.01
+- Numpy
+- Image processing
