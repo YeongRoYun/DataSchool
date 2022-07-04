@@ -20,3 +20,6 @@ by Data Campus
 #### 07.01
 - Numpy
 - Image processing
+
+#### 07.04
+- RDBS
