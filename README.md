@@ -23,6 +23,12 @@ by Data Campus
 
 #### 07.04
 - RDBS
+
 #### 07.05
 - HTTP
 - RE
+
+#### 07.06
+- Scraper 도안 완성 및 WikiScraper 제작
+- Image 완료
+- 프로젝트 아이디어 제시(레시피 자동완성)
