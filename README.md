@@ -32,3 +32,8 @@ by Data Campus
 - Scraper 도안 완성 및 WikiScraper 제작
 - Image 완료
 - 프로젝트 아이디어 제시(레시피 자동완성)
+
+#### 07.07
+- Crawler와 Scraper의 차이
+- Docker
+- Team meeting for developing idea of the project
