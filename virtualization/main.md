@@ -1,5 +1,4 @@
-# Kubernetes
-## Concept
+# Concept
 | Concept | Means |
 | - | - |
 | Container | Isolated environment running applications |
@@ -8,17 +7,17 @@
 | Kubernetes | The tool that ocastrate containers through a container runtime |
 | Ocastration | Managing containers and configures across several servers |
 
-## Deployment paradigm Shift
+# Deployment paradigm Shift
 
-### Tranditional
+## Tranditional
 - Many application running on a one OS
 - Each app interferes with each other
 
-### Virtualized
+## Virtualized
 - One application running on each virtual machine above Hypervisor layer
 - Achieve the isolation but heavy
   
-### Container
+## Container
 - One application running on each container above container runtime
 - The OS is only one
   - Ignore all layers below the container runtime
@@ -33,5 +32,3 @@
 | Resource | Sharing | Allocated by Hypervisor | Allocated by OS |
 | Isolation | None | Full | Isolated runtime but sharing kernel |
 | Problem Transfer | High | Low | Middle |
-
-## Docker
