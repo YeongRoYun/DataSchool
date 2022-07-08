@@ -411,3 +411,95 @@ https://docs.docker.com/engine/api/
 
 ## Container configuration and deployment
 
+### Proper proportion of single container in the system
+
+#### Single container = Single process **??**
+- Docker is the technique for deploying a service
+- In this respect, WEB service or resident program can occupy its own container
+```
+
+cron -----> Job
+    execute
+```
+- BUT, like periodic services, they can increase the unnecessary complexity
+  ```
+                   API(IPC)
+  cron(A container) ----> Job(B container)
+                    <----
+                     IPC
+  ```
+  or
+  ```
+    -------------Cron--------------
+    |                              |
+    |        ----Job container--   |
+    |       |                   |  |
+    |       |                   |  |
+    |        -------------------   |
+     ------------------------------
+  ```
+  - Simply, single container runs both cron and job
+  ```
+   --------Container--------------
+  |                               |
+  |     cron -------> Job         |
+  |                               |
+   -------------------------------
+  ```
+
+#### Single container focuses on only one concern
+- A container **SHOULD** have only one concern
+- The number of processes is less importatnt
+
+### Portability
+- Containers can be used in other environments if docker is
+- BUT, some exceptions exist because **the kernel is shared**
+
+#### Differnces between kernel and archtecture
+- Docker virtualization use the host OS and kernel resources
+- Thus, the host **MUST** have same archtecture or kernel to use images
+  
+#### Library and DLL
+- If services use static-libraries, they are included in a image
+- BUT, DLL **MAY** be in host environments
+- Example
+  - When copying the app to deploy it in CI step, the dll referenced by app cannot exist
+- **Static-Linking is recommanded with docker**
+- BUT, the image is much more heavier
+
+#### Docker-friendly services
+- To construct high-portable services,
+- Use **environmental variables**
+  - RUN with **ARGUMENTS**
+  - USE **.config** files
+    - Don't make all images for config files
+    - Pass it by RUNNING arguments
+  - Control the service to environmental variables
+    - Pass it by RUNNING arguments
+  - USE **.config** with **environmental variables**
+    - If configuration contains env variables, it can be used as **TEMPLATE**
+
+#### Manage Persistent data
+- To manage **stateful** services, chaning states, with docker, the files **MUST** remain
+- Data Volume
+  - The mechanism for leaving data in container
+  - Provide reusing or sharing data between **host and container**
+  ```
+  docker container run -v host|container_dir repo[:tag]
+  ```
+  - The dependency with host exist **UNFORTUNATELY**
+- Data Volume Container
+  - Share data between **containers**
+  - The data volumes are encapsulated in the container. Thus, the connection with host can be loosely
+  ```
+  Docker
+           Services                Data Container
+        /data/container-data <-----  /data/container-data
+        /data/host-data                      |
+              |                              |
+              |                              |
+  Host  /home/xx/host-data       /var/lib/docker/volumnes/...
+  ```
+  - To connect, ```run --volumes-from data-container```
+  - ```VOLUME external_mount_loc``` MUST be wroten in Dockerflie of data-container
+  - Data-container doesn't need RUNNING status
