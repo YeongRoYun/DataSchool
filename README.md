@@ -37,3 +37,8 @@ by Data Campus
 - Crawler와 Scraper의 차이
 - Docker
 - Team meeting for developing idea of the project
+
+#### 07.08
+- Docker 끝
+- Kubernetes 시작
+- GMail Scraper 제작
