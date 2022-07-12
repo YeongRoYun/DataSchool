@@ -42,3 +42,8 @@ by Data Campus
 - Docker 끝
 - Kubernetes 시작
 - GMail Scraper 제작
+
+#### 07.12
+- Pytorch
+- NLP
+- Audio
