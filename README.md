@@ -47,3 +47,8 @@ by Data Campus
 - Pytorch
 - NLP
 - Audio
+
+#### 07.13
+- Pytorch
+- Sound
+- Scraper 거의 완성
