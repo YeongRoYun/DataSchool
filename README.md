@@ -52,3 +52,7 @@ by Data Campus
 - Pytorch
 - Sound
 - Scraper 거의 완성
+
+#### 07.14
+- Scraper 완성
+- Pytorch
