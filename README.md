@@ -56,3 +56,7 @@ by Data Campus
 #### 07.14
 - Scraper 완성
 - Pytorch
+
+#### 07.18
+- Pytorch 책 다 훑어봄
+- Vue.js / Typescript 공부 시작
