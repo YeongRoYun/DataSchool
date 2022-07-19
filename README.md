@@ -60,3 +60,6 @@ by Data Campus
 #### 07.18
 - Pytorch 책 다 훑어봄
 - Vue.js / Typescript 공부 시작
+
+#### 07.19
+- Vue.js / Typescript
