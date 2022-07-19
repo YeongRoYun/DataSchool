@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://unpkg.com/vue@next"></script> <!--CDN-->
+        <style>
+            .app {
+                font-size: 3em;
+            }
+        </style>
+    </head>
+    
+    <body>
+        <div class="app">
+            <!--Declarative Rendering-->
+            <!--Access data object by {{}}-->
+            <!--Automatically render if data are changed-->
+            {{ msg_hello }} <br>
+            {{ msg_author}}
+        </div>
+
+        <script>
+            const App = {
+                data() {
+                    return {
+                        msg_hello: "Hello Vue 3 CDN",
+                        msg_author: "yyr"
+                    }
+                }
+            }
+
+            Vue.createApp(App).mount('.app')
+        </script>
+    </body>
+</html>
