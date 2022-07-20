@@ -1,5 +1,5 @@
 {
-  "name": "hello-world-vue",
+  "name": "custom_table",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "path": "^0.12.7",
     "vue": "^3.2.37"
   },
   "devDependencies": {

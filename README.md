@@ -63,3 +63,6 @@ by Data Campus
 
 #### 07.19
 - Vue.js / Typescript
+
+#### 07.20
+- Vue.js, 주제 정함
