@@ -1,16 +1,15 @@
-
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "ES2016",
+    "module" : "CommonJS",
     "moduleResolution": "node",
-    "outDir": "dist",
+    "target": "ES6",
     "baseUrl": ".",
+    "outDir": "/dist",
+    "paths": {"*" : ["node_modules/*"]},
+    "esModuleInterop": true,
     "sourceMap": true,
     "downlevelIteration": true,
-    "noImplicitAny": false,
-    "paths": {"*":["node_modules/*"]},
+    "noImplicitAny": true,
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
 }

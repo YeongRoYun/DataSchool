@@ -1,3 +1,7 @@
-import {testMakePerson} from './utils/makePerson'
+class A{
+    value: number = 1;
+    method: () => void = () => {console.log(`${this.value}`)};
+};
 
-testMakePerson();
+const a = new A();
+a.method();
