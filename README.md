@@ -69,3 +69,6 @@ by Data Campus
 
 ### 07.21
 - Typescript
+
+### 07,24
+- Vue.js todolist End
