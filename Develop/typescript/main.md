@@ -56,7 +56,7 @@ export {default [as name]} from 'module'
   - ```paths```
     - Module paths like ```{"*" : ["node_modules/*"]}```
   - ```esModuleInterop```
-    - Set true for interpolating ```commonjs``` and ```amd``` modules
+    - Set true for interpolating ```commonjs/AMD``` and ```ESM``` modules
   - ```sourceMap```
     - Make ```.js.map``` that maps js code with ts code
   - ```downlevelIteration```
@@ -393,3 +393,165 @@ class A{
 
 ### Method Chain
 - To implement method-chain, methods always return ```this```
+
+## Triple-Slash Directives
+- Single-line comments containing ```a single XML tag```
+- The contents of the comment are used as compiler directives
+- **ONLY** valid at the top of their containing file
+- Mutiple directives are also permitted  
+```/// <reference path ="..."/>```
+- The most common of this group
+- It servers as a declaration of dependency between files
+- **Triple-slash references** instruct the compiler to include additional files in the compilation process
+- 
+
+
+## Module
+- In typescript, just as in ECMAScript 2015, any file containing a tip-level ```import``` or ```export``` is considered a module
+- Conversely, a file without any top-level ```import``` or ```export``` declarations is treated as a script whose contents are available in the global scope
+- **Modules** are executed within their own scope, not in the global scope.
+
+## Non-Modules
+- The JS specification declares that any JS files without an ```export``` or top-level ```await``` should be considered a script and not a module
+- Their variables and types are declared to be in the shared global scope,
+  - Join ```outFile``` compiler option to join multiple input filesm or Use multiple ```<script>``` tags in HTML to load these files
+- The loaded order is important
+- If a file doesn't currently have any ```import```s or ```export```s, but you want to be treated as a module, add ```export {};```
+  - Change the file to be a module exporting nothing
+
+## Modules in Typescript
+- **CONSIDER**
+  - ```Syntax``` : What syntax do I want to use to ```import``` and ```export``` things?
+  - ```Module Resolution``` : What is the relationship between module names(or paths) and files on disk?
+  - ```Module Output Target``` : What should my emitted JS module look like?
+
+### ES Module Syntax
+- Define main export
+```
+// @filename: hello.ts
+export default function helloWorld() { console.log("Hello, world!")};
+```
+- This is then imported via
+```
+import helloWorld from './hello'
+helloWorld();
+```
+- Export more than one by omitting ```default```
+```
+// @filename: maths.ts
+export var pi = 3.14;
+export let squareTwo = 1.41;
+```
+- These can be used in another file via the ```import``` syntax
+```
+import { pi, phi, absolute } from './maths';
+```
+- Mix and match the above syntax into a single ```import```
+```
+//@filename: maths.ts
+export const pi = 3.14;
+export default class RandomNumberGenerator {};
+
+//@filename: app.ts
+import RandomNumberGenerator, { pi } from './maths';
+```
+- Take all of the exported objects an put them into a ```single namespace```
+```
+import * as math from './maths';
+```
+- Can import a file and ```not include any variables``` into the current module
+```
+import './maths';
+console.log("3.14");
+```
+- In this case, the ```import``` does nothing. However, all of the code in ```maths.ts``` was evalutaed, which could trigger **side-effects**
+
+### Typescript Specific ES Module Syntax
+- Types can be exported and imported using the same syntax as JS values
+```
+@filename: animal.ts
+export type Cat = {breed: string; yearOfBirth: number};
+export interface Dog { breeds: string[]; yearOfBirth: number};
+
+@filename: app.ts
+import { Cat, Dog } from './animal'
+```
+- Typescript has the ```extended import``` syntax with two concepts for declaring an import of a ```type```
+  - ```import type```
+    - Only import types
+```
+//@filename : animal.ts
+export const createCatName = () => "fluffy";
+//@filename : app.ts
+import type { createCatName } from './animal'; // <-- Error!
+```
+  - ```inline type imports```
+    - Typescript 4.5 alsow allows for individual imports to be prefixed with ```type```
+```
+import { createCatName, type Cat, type Dog, } from './animal';
+```
+
+### ES Module Syntax with CommonJS Behavior
+- Typescript has ES Module syntax which directly correlates to a CommonJS and AMD ```require```
+```
+import fs = require('fs'); // CommonJS or AMD
+import fs from 'fs'; // ESM
+```
+
+### CommonJS Syntax
+- ```Exporting```
+  - Identifieres are exported via setting the ```exports``` property on a global called ```module```
+```
+@filename: maths.ts
+function absolute(num: number) { return abs(num);};
+module.exports = {
+  pi: 3.14,
+  absolute,
+}
+```
+- ```Importing```
+  - These files can be imported via a ```require``` statement
+  - Destructuring is also possible
+```
+@filename: app.ts
+const maths = require('maths');
+const { pi } = require('maths');
+```
+
+### CommonJS and ES Module interop
+- with ```esModuleInterop``` in ```CompilerOptions```, Typescript reduces the friction between the two different sets of constraints
+
+## TypeScript's Module Resolution Options
+- Module resolution is the process of taking a string from the ```import``` or ```require``` statement, and determining what file that string refers to.
+- Typescript includes two resolution strategies
+  - ```Classic```
+    - The default when the compiler option ```module``` is not ```commonjs```
+  - ```Node```
+    - Replicate how Node.js works in CommonJS mode, with additional checks for ```.ts``` and ```.d.ts```
+  - ```moduleResolution```, ```baseUrl```, ```paths```, ```rootDirs``` are also influenced
+
+## Typescript's Module Output Options
+- ```target```
+  - Determine which JS features are downleveled(converted to run in older JS runtimes) and which are left intact
+- ```module```
+  - Determine what code is used for modules to interact with each other
+
+## TypeScript namespaces
+- Typescript has tis own module format called ```namespace``` which pre-dates the ES Modules standard
+
+## ```export =``` and ```import = require()```
+- Both CommonJS and AMD generally have the concept of an ```exports``` object which contains all exports from a module
+- Typescript supports ```export = ``` to model the traditional CommonJS and AMD workflow
+  - ```export = ``` specifies a single object that is exported from the module
+  - To import it, Typescript-specific ```import module = require("module")``` MUST be used
+
+## Working with Other JS Libraries
+- To describe the shape of libraries not written in TypeScript, we need to ```declare the API``` that the library exposes
+- ```Ambient``` : Declaration not to define an implementation
+  - Typically, these are defined in ```.d.ts```
+  - Similar to ```.h```
+
+### Ambient Modules
+- We could define each module in its own ```.d.ts``` file with top-level export declarations
+- But, it's more convenient to write them as one larger ```.d.ts``` file
+- To do so, we use a construct similar to ambient namespaces, but we use the ```module``` keyword and quoted name of the module which will be available to a later import
