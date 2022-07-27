@@ -72,3 +72,6 @@ by Data Campus
 
 ### 07,24
 - Vue.js todolist End
+
+### 07.27
+- Vue.js Web App Part1 End

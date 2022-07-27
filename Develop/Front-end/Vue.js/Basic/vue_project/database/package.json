@@ -1,0 +1,24 @@
+{
+  "name": "database",
+  "version": "0.0.1",
+  "description": "web_application_db",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "ts-node src/index.ts",
+    "build": "tsc && node dist"
+  },
+  "author": "yyr",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.6.1",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "sqlite3": "^5.0.10",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.7.4"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.19"
+  }
+}

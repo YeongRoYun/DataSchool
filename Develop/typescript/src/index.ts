@@ -1,7 +1,4 @@
-class A{
-    value: number = 1;
-    method: () => void = () => {console.log(`${this.value}`)};
-};
+type T = {[key:string]: string, key:"email"|"name", value:string};
 
-const a = new A();
-a.method();
+const x:T = {key:"name", value:"hello"};
+console.log(x.key);
