@@ -232,3 +232,116 @@ return withDirectives(h('div'), [
 ]);
 ```
 
+## Vue-Router
+`npm i vue-router`
+### RouteRecordRaw
+- Define the relations between URL and Component
+```
+const routes = [
+  { path: '/', name: 'Home', component: Home}, ...
+]
+```
+- `path` : The URL
+  - With parameters,
+    - `/path/:some-thing` : `this.$route.params.someThing`
+    - `/path/:a?` : `/path` or `/path/a`
+    - `/path/:x+?` : one more parameters
+    - `/path/:x*?` : zero more parameters
+  - To define type of parameters,
+    - `(\\d)` : Only number
+  - The regex uses `Path-To-RegExp`
+- `redirect` : Pass URL at another URL
+- `alias` : Reference `path`
+- `name` : Set name of `path`
+- `beforeEnter` : Call before routing. Generally used to modifying queries, hashes, or reject
+  - `Navigation Guard` : Protect navigation when routing
+    ```
+    {beforeEnter : (to, from, next) => {//something....; return next(...)}}
+    ```
+    - `to` : Target Router object
+    - `from` : Origin Router object
+    - `next` : Permit or Reject to move `to`
+- `props` : Change parameters to props
+  - Boolean mode
+    - `{path: '/abc/:id', component: Abc, props:true}` : `id` is `prop` not `$route.params.id`
+  - Object mode
+    - `{path: '/abc', component: Abc, props:{foo: true, bar: false}}` : Pass predefined `foo` and `bar`
+    - `{path: '/abc', component: {default: User, sidebar: Sidebar}, props:{default: true, sidebar: false}}` : Draw the selected component
+  - Function mode
+    - `{path: '/abc', component: Abc, props: (route)=>({bar: route.query.foo})}` : Set `$route.params` to `prop`
+- `meta` : Set meta-information
+  - Called by `to.meta.META_KEY` format
+  - Generally used when checking whether login or not
+  - `{path: '/abc', component: Abc, meta: {need_login: true}}`
+  - At navigation gaurd, 
+    ```
+    router.beforeEach(to, from) => {
+      if(to.meta.need_login && !logged_in) return {path: '/login'}
+    }
+    ```
+- `children` : Configure sub-routers
+  - `{path: '/abc', component: Abc, children: [{path: 'foo', component: Foo}]}`
+  - `abc/foo` can be accessed after `/abc`
+
+### Moving pages
+- In template, use `<router-link>` tag
+  - `<router-link>` is defined with `<a>` tag
+  - `<router-link to="/foo">` : move to `/foo`
+  - `<router-link :to={name: 'Foo', params: {foo: 'bar'}}>` : move to the Router object
+    - `path` : URL
+    - `name` : Name of `path`
+    - `params`: Parameters
+    - `query` : Query, `{query: {foo: bar}}` means `?foo=bar`
+  - `<router-link ... replace>` : Remove `from` at history
+- In script, use `push` and `replace` functions
+  - `router.push({...})` : same as `<router-link>` except `replace` keyword
+    - `{hash: ...}` : `/URL#hash`
+  - `router.replace({...})` : same as `<router-link` with `replace` keyword
+
+### Place routable components in parent
+- In template, use `<router-view>` tag
+  ```
+  <div id="URL_nav">
+    <router-view></router-view>
+  </div>
+  ```
+  - Insert `children`
+  ```
+  const routes = [
+    {
+      path = '/parent',
+      component: Parent,
+      children: [
+        {path: 'profile', component: Profile},
+        {path: 'applications', component: Application}
+      ]
+    }
+  ]
+  ```
+
+### Create Router instance
+- Router instance is created by `createRouter`
+  - `history`
+    - `createWebHistory()` : default, don't change URL
+    - `createWebHashHistory()` : Append hash(`#`)
+  - `linkActiveClass` : Insert additional class at active class
+  - `routes` : `RouteRecordRaw`
+
+## Make Notification
+- Use `Websocket` for real-time `Push Notification`
+- With `cookie`, make simple Notification.
+- Usually, show noti as `Layer Popup`
+- But, it can be implemented with `Teleport`
+
+### Cookie with ES module
+- Use `document.cookie += 'key=val;expire=some_time;path=some_path` format
+- `new Date().getTimezoneOffset()`
+  - Cookie receives expire's value with `UTC` format
+  - `toUTCString()` always returns the time based on `0`-time zone
+  - To adjust time, use `getTimezoneOffset()`
+  - Ex. Korea: `Offset = -540` => `Offset / 60 = -9` => `date.hour + 9 = korea's timezone`
+
+### Teleport
+- Append the Component the bottom of DOM-tree
+`<teleport to="#notification" v-if="show_notification">`
+- Append the component the bottom of `#notification` DOM-Tree

@@ -21,6 +21,7 @@ export default {
 import {onMounted, computed} from 'vue';
 import {useStore} from 'vuex';
 import useAxios from '/@app_modules/axios';
+import { RSP_RESULT } from '/@app_modules/axios';
 
 const store = useStore();
 const { axiosGet } = useAxios();
@@ -29,7 +30,7 @@ const applications_count = computed(()=>store.getters['applications/applications
 
 onMounted(() => {
     if(!store.getters['applications/applications_count']) {
-        axiosGet('/db/applications', (data:any) => {
+        axiosGet('/db/applications', (data:RSP_RESULT) => {
             store.dispatch('applications/setApplications', data.data);
         });
     }
