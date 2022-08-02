@@ -75,3 +75,6 @@ by Data Campus
 
 ### 07.27
 - Vue.js Web App Part1 End
+
+### 08.02
+- Vue.js Web App Part2 End
