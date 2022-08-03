@@ -1,29 +1,28 @@
 import TYPE from './type';
-type DB = {run: any};
-type Application = {id: number, name: string, content: string, date: string, platform: string, url: string, image: string};
+import { DB, Application } from './type';
+import {runPromise } from './promise';
+
 
 function fn_about_me(db:DB) {
     let query = `
     CREATE TABLE IF NOT EXISTS tbl_about_myself (name TEXT, email TEXT, UNIQUE(name, email))
     `;
-    db.run(query, (err:Error) => {
-        if(!err) {
+    runPromise(db, query)
+        .then((db:DB) => {
             query = `
             INSERT OR IGNORE INTO tbl_about_myself (name, email) VALUES ('DOPT', 'armigar@naver.com')
             `;
-            db.run(query);
-        } else {
-            console.log(err);
-        }
-    })
+            return runPromise(db, query);
+        })
+        .catch((err:Error) => console.log(err));
 };
 
 function fn_resume(db:DB) {
     let query = `
     CREATE TABLE IF NOT EXISTS tbl_my_resume (date DATE, title TEXT, content TEXT, url TEXT ,UNIQUE(date, title))
     `;
-    db.run(query, (err:Error) => {
-        if(!err) {
+    runPromise(db, query)
+        .then((db:DB) => {
             const resume:{date:string, title:string, content:string, URL:string}[] = [
                 {
                     date: '1980-11-27',
@@ -38,22 +37,22 @@ function fn_resume(db:DB) {
                     URL: "",
                 },
             ];
-            resume.forEach(({date, title, content, URL}) => {
-                const query = `INSERT OR IGNORE INTO tbl_my_resume (date, title, content, URL) VALUES ("${date}", "${title}", "${content}", "${URL}")`;
-                db.run(query);
-            });
-        } else {
-            console.log(err);
-        }
-    });
+            const command_list:Promise<DB>[] = []
+            for(const {date, title, content, URL} of resume){
+                query = `INSERT OR IGNORE INTO tbl_my_resume (date, title, content, URL) VALUES ("${date}", "${title}", "${content}", "${URL}")`;
+                command_list.push(runPromise(db, query));
+            }
+            return Promise.all(command_list);
+        })
+        .catch((err:Error) => console.log(err));
 };
 
 function fn_applications(db:DB) {
     let query = `
     CREATE TABLE IF NOT EXISTS tbl_applications (id INT, name TEXT, content TEXT, date DATE, platform TEXT, url TEXT, image TEXT, UNIQUE(name, date))
     `;
-    db.run(query, (err:Error) => {
-        if(!err) {
+    runPromise(db, query)
+        .then((db:DB) => {
             const applications:Application[] = [
                 {
                     id: 1,
@@ -74,15 +73,64 @@ function fn_applications(db:DB) {
                     image: ""
                 },
             ];
-            applications.forEach((item: Application) => {
-                const query = `
-                INSERT OR IGNORE INTO tbl_applications (id, name, content, date, platform, url, image) VALUES ("${item.id}", "${item.name}", "${item.content}", "${item.date}", "${item.platform}", "${item.url}", "${item.image}")
+            const command_list:Promise<DB>[] = applications.map(({id, name, content, date, platform, url, image}:Application) => {
+                query = `
+                INSERT OR IGNORE INTO tbl_applications (id, name, content, date, platform, url, image) VALUES ("${id}", "${name}", "${content}", "${date}", "${platform}", "${url}", "${image}")
                 `;
-                db.run(query)
+                return runPromise(db, query);
             });
-        }
-    });
+            return Promise.all(command_list);
+        })
+        .catch((err:Error) => console.log(err));
 };
+
+function fn_notification(db:DB) {
+    let query = `
+    CREATE TABLE IF NOT EXISTS tbl_notification (id INTEGER PRIMARY KEY 
+        AUTOINCREMENT, content TEXT, expiration DATE, type TEXT)`;
+    runPromise(db, query)
+        .then((db:DB) => {
+            query = 'DELETE from tbl_notification';
+            return runPromise(db, query);
+        })
+        .then((db:DB) => {
+            query = `INSERT INTO tbl_notification (content, expiration, type) VALUES ('사이트 공사중입니다', '2099-12-31', 'warning')`;
+            return runPromise(db, query);
+        })
+        .catch((err:Error) => console.log(err));
+}
+
+function fn_blog(db:DB) {
+    let query = `
+        CREATE TABLE IF NOT EXISTS tbl_blog (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME DEFAULT (datetime('now', 'localtime')), post TEXT, type TEXT DEFAULT 'html')
+    `;
+    runPromise(db, query)
+        .then((db:DB) => {
+            query = `
+                INSERT INTO tbl_blog (title, post) VALUES ('Sample Blog Test', '<p> This blog is wonderful!</p>');
+            `;
+            return runPromise(db, query);
+        })
+        .catch((err:Error) => {
+            console.log(err);
+        });
+}
+
+function fn_accounts(db:DB) {
+    let query = `
+        CREATE TABLE IF NOT EXISTS tbl_accounts (id INTEGER PRIMARY KEY
+            AUTOINCREMENT, email TEXT, password TEXT, date DATETIME DEFAULT(datetime('now', 'localtime')), grade TEXT, token TEXT)
+    `;
+    runPromise(db, query)
+        .then((db:DB) => {
+            query = `
+                INSERT OR IGNORE INTO tbl_accounts (id, email, password, grade, token)
+                VALUES ((SELECT id FROM tbl_accounts WHERE grade = 'owner'), 'vue', 'vue', 'owner', null)
+            `;
+            return runPromise(db, query);
+        })
+        .catch((err:Error) => console.log(err));
+}
 
 export default function run(db:DB, type:number) {
     if(type == TYPE.about_me) {
@@ -91,5 +139,11 @@ export default function run(db:DB, type:number) {
         fn_resume(db);
     } else if(type == TYPE.applications) {
         fn_applications(db);
+    } else if(type == TYPE.notification) {
+        fn_notification(db);
+    } else if(type == TYPE.blog) {
+        fn_blog(db);
+    } else if(type == TYPE.accounts) {
+        fn_accounts(db);
     }
 };

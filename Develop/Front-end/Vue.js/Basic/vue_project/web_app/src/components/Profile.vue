@@ -47,6 +47,7 @@ export default {
 import { defineComponent, computed } from 'vue';
 import { useStore } from 'vuex';
 import useAxios from '/@app_modules/axios';
+import { RSP_RESULT } from '/@app_modules/axios';
 
 const Card = defineComponent({
     name: 'Card',
@@ -72,7 +73,9 @@ const Card = defineComponent({
 });
 const store = useStore();
 const { axiosGet } = useAxios();
-const onSuccess = (data:any) => store.dispatch('about_me/setAboutMeData', data.data);
+const onSuccess = (data:RSP_RESULT) => {
+    store.dispatch('about_me/setAboutMeData', data.data);
+}
 axiosGet('/db/about-me', onSuccess);
 const user_data = computed(() => store.getters['about_me/user_data']);
 </script>
