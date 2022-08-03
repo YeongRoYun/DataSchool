@@ -1,23 +1,5 @@
 import {DB, RSP_RESULT} from './type';
-
-
-const getPromise = (db:DB, query:string) => new Promise<{db:DB, data:any}>(
-    (resolve, reject) => {
-        db.get(query, (err:Error, row:any) => {
-            if(!err) resolve({db:db, data:row});
-            else reject(err);
-        });
-    }
-);
-
-const allPromise = (db:DB, query:string) => new Promise<{db:DB, data:any[]}>(
-    (resolve, reject) => {
-        db.all(query, (err:Error, row:any) => {
-            if(!err) resolve({db:db, data:row});
-            else reject(err);
-        });
-    }
-);
+import { getPromise, allPromise } from './promise';
 
 export default function setup(app:any, db:DB) {
     const result:RSP_RESULT = {rsp: "fail"};
@@ -77,5 +59,19 @@ export default function setup(app:any, db:DB) {
                 result.error = err.message;
                 res.json(result);
             });
+    });
+    app.get('/db/blog', (req:any, res:any, next:any) => {
+        let result:RSP_RESULT = {rsp: "fail"};
+        let query = `SELECT * FROM tbl_blog order by id desc`;
+        allPromise(db, query)
+            .then(({db, data}) => {
+                result.rsp = "ok";
+                result.data = data;
+            })
+            .catch((err:Error) => {
+                console.log(err);
+                result.error = err.message;
+            })
+            .finally(() => res.json(result));
     });
 };

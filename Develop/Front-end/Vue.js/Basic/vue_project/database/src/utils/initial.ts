@@ -1,12 +1,7 @@
 import TYPE from './type';
-import { DB, Application } from './type'
+import { DB, Application } from './type';
+import {runPromise } from './promise';
 
-const runPromise = (db:DB, query:string) => new Promise((resolve:(arg0: DB)=>void, reject) => {
-    db.run(query, (err:Error) => {
-        if(!err) resolve(db);
-        else reject(err);
-    })
-});
 
 function fn_about_me(db:DB) {
     let query = `
@@ -105,6 +100,38 @@ function fn_notification(db:DB) {
         .catch((err:Error) => console.log(err));
 }
 
+function fn_blog(db:DB) {
+    let query = `
+        CREATE TABLE IF NOT EXISTS tbl_blog (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, date DATETIME DEFAULT (datetime('now', 'localtime')), post TEXT, type TEXT DEFAULT 'html')
+    `;
+    runPromise(db, query)
+        .then((db:DB) => {
+            query = `
+                INSERT INTO tbl_blog (title, post) VALUES ('Sample Blog Test', '<p> This blog is wonderful!</p>');
+            `;
+            return runPromise(db, query);
+        })
+        .catch((err:Error) => {
+            console.log(err);
+        });
+}
+
+function fn_accounts(db:DB) {
+    let query = `
+        CREATE TABLE IF NOT EXISTS tbl_accounts (id INTEGER PRIMARY KEY
+            AUTOINCREMENT, email TEXT, password TEXT, date DATETIME DEFAULT(datetime('now', 'localtime')), grade TEXT, token TEXT)
+    `;
+    runPromise(db, query)
+        .then((db:DB) => {
+            query = `
+                INSERT OR IGNORE INTO tbl_accounts (id, email, password, grade, token)
+                VALUES ((SELECT id FROM tbl_accounts WHERE grade = 'owner'), 'vue', 'vue', 'owner', null)
+            `;
+            return runPromise(db, query);
+        })
+        .catch((err:Error) => console.log(err));
+}
+
 export default function run(db:DB, type:number) {
     if(type == TYPE.about_me) {
         fn_about_me(db);
@@ -114,5 +141,9 @@ export default function run(db:DB, type:number) {
         fn_applications(db);
     } else if(type == TYPE.notification) {
         fn_notification(db);
+    } else if(type == TYPE.blog) {
+        fn_blog(db);
+    } else if(type == TYPE.accounts) {
+        fn_accounts(db);
     }
 };

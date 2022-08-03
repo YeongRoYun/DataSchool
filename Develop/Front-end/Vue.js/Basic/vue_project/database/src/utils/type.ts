@@ -3,6 +3,8 @@ export default {
     resume: 2,
     applications: 3,
     notification: 4,
+    blog: 5,
+    accounts: 6,
 };
 export type DB = {run: any, all: any, get: any};
 export type Application = {id: number, name: string, content: string, date: string, platform: string, url: string, image: string};

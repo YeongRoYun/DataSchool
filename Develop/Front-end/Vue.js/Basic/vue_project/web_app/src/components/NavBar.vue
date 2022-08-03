@@ -64,6 +64,7 @@ import { ref, reactive, computed, onMounted} from 'vue';
         { key: 'home', value: '홈', URL: '/home', position: 'left' },
         { key: 'app', value: '애플리케이션', URL: '/application', position: 'left' },
         { key: 'me', value: 'Profile', URL: '/profile', position: 'right' },
+        { key: 'admin', value: 'Admin', URL: '/admin', position: 'right'},
     ];
     const left_menus = computed(() => menus.filter((i:{position:string}) => i.position == 'left'));
     const right_menus = computed(() => menus.filter((i:{position:string}) => i.position == 'right'));
