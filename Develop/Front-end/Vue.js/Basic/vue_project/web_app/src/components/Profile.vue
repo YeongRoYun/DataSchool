@@ -45,7 +45,9 @@ export default {
 </script>
 <script lang="ts" setup>
 import { defineComponent, computed } from 'vue';
-import { useStore } from 'vuex';
+// import { useStore } from 'vuex';
+import { useProfile } from '/@compositions/useProfile';
+
 import useAxios from '/@app_modules/axios';
 import { RSP_RESULT } from '/@app_modules/axios';
 
@@ -71,11 +73,14 @@ const Card = defineComponent({
         <div v-if="!show" class="col-sm"></div>
     `,
 });
-const store = useStore();
+// const store = useStore();
+const {user_data, setAboutMeData } = useProfile();
+
 const { axiosGet } = useAxios();
 const onSuccess = (data:RSP_RESULT) => {
-    store.dispatch('about_me/setAboutMeData', data.data);
+    // store.dispatch('about_me/setAboutMeData', data.data);
+    setAboutMeData(data.data);
 }
 axiosGet('/db/about-me', onSuccess);
-const user_data = computed(() => store.getters['about_me/user_data']);
+// const user_data = computed(() => store.getters['about_me/user_data']);
 </script>

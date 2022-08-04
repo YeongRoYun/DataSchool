@@ -77,7 +77,7 @@ export default {
 </script>
 
 <script lang="ts" setup>
-import {ref, onMounted } from 'vue';
+import {Ref, ref, onMounted, inject } from 'vue';
 import useLogin from '/@app_modules/login';
 import {getCookie, setCookie} from '/@app_modules/cookie';
 import {RSP_RESULT} from '/@app_modules/axios';
@@ -92,6 +92,8 @@ const props = defineProps({
         default: 'login',
     },
 });
+const toast:Ref<string> = inject('toast', ref(""));
+
 const emits = defineEmits(['state']);
 const ref_email = ref(null);
 const stay = ref(false);
@@ -123,10 +125,12 @@ const onSubmit = (evt:Event) => {
             })
             .catch((err: Error) => {
                 invalid.value = err.message;
+                console.log(err);
             });
     } else {
         if(new_password1.value != new_password2.value) {
             invalid.value = 'diff_passwords';
+            toast.value = '새로운 비밀번호가 다릅니다.';
             new_password1.value = new_password2.value = '';
         } else {
             updatePassword(email.value, new_password1.value, password.value)

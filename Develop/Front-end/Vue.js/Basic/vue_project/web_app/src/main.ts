@@ -9,8 +9,9 @@ import Home from '/@components/Home.vue';
 import Admin from '/@components/Admin.vue';
 import Login from '/@components/Login.vue';
 import Editor from '/@components/Editor.vue';
+import Toast from '/@components/Toast.vue';
 
-import store from '/@store';
+// import store from '/@store';
 import { router } from '/@router';
 
 import './style.css';
@@ -18,7 +19,7 @@ import 'bootstrap/dist/js/bootstrap.esm.min';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const app = createApp(App);
-app.use(store);
+// app.use(store);
 app.use(router);
 app.component(NavBar.name, NavBar);
 app.component(Profile.name, Profile);
@@ -29,5 +30,6 @@ app.component(Home.name, Home);
 app.component(Admin.name, Admin);
 app.component(Login.name, Login);
 app.component(Editor.name, Editor);
+app.component(Toast.name, Toast);
 
 app.mount('#app');

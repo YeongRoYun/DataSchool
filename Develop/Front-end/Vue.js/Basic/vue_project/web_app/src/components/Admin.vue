@@ -30,8 +30,8 @@ onBeforeMount(() => {
     const { checkToken } = useLogin();
     const auto_login = getCookie('stay') == 'true';
 
-    email.value = email.value == '' ? 'test-email' : email.value;
-    token.value = token.value =='' ? 'test-token' : token.value;
+    email.value = !email.value ? 'vue' : email.value;
+    token.value = !token.value ? '' : token.value;
 
     checkToken(email.value, token.value)
         .then((result:RSP_RESULT) => {
@@ -44,8 +44,10 @@ onBeforeMount(() => {
                 state.value = 'login';
             }
         })
-        .catch((err:Error) => state.value = 'login');
-});
+        .catch((err:Error) => {
+            state.value = 'login';
+        })});
+
 const onLogout = (evt:Event) => {
     setCookie('token', '');
     state.value='login';

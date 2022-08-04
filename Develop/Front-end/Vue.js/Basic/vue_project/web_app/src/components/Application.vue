@@ -19,20 +19,25 @@ export default {
 
 <script lang="ts" setup>
 import {onMounted, computed} from 'vue';
-import {useStore} from 'vuex';
+// import {useStore} from 'vuex';
+import {useApplications} from '/@compositions/useApplications';
 import useAxios from '/@app_modules/axios';
 import { RSP_RESULT } from '/@app_modules/axios';
 
-const store = useStore();
+// const store = useStore();
+const {applications_count, applications, setApplications} = useApplications();
 const { axiosGet } = useAxios();
-const applications = computed(() => store.getters['applications/applications']());
-const applications_count = computed(()=>store.getters['applications/applications_count']);
+// const applications = computed(() => store.getters['applications/applications']());
+// const applications_count = computed(()=>store.getters['applications/applications_count']);
 
 onMounted(() => {
-    if(!store.getters['applications/applications_count']) {
-        axiosGet('/db/applications', (data:RSP_RESULT) => {
-            store.dispatch('applications/setApplications', data.data);
-        });
+    // if(!store.getters['applications/applications_count']) {
+    //     axiosGet('/db/applications', (data:RSP_RESULT) => {
+    //         store.dispatch('applications/setApplications', data.data);
+    //     });
+    // }
+    if(!applications_count.value) {
+        axiosGet('/db/applications', (data:RSP_RESULT) => {setApplications(data.data)});
     }
 });
 </script>
