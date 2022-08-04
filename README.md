@@ -81,3 +81,6 @@ by Data Campus
 
 ### 08.03
 - Vue.js Web App Part3 End
+
+### 08.04
+- Vue.js 책은 끝!
