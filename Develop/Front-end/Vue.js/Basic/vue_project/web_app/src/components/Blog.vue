@@ -35,8 +35,8 @@
           <p class="mb-0">피스타치오 버블티는 맛있당!</p>
         </div>
 
-        <div class="p-4">
-          <h4 class="fst-italic">Archives</h4>
+        <blog-plugin>
+          <template v-slot:header>Archives</template>
           <ol class="list-unstyled mb-0">
             <li v-for="(archive, index) in archives" :key="index">
                 <a data-bs-toggle="collapse" :data-bs-target="'#archive-' + index" href="#">{{archive.key}}</a>
@@ -52,14 +52,14 @@
                 </div>
             </li>
           </ol>
-        </div>
+        </blog-plugin>
 
-        <div class="p-4">
-          <h4 class="fst-italic">Elsewhere</h4>
+        <blog-plugin>
+          <template v-slot:header>Elsewhere</template>
           <ol class="list-unstyled">
             <li><a href="https://github.com/YeongRoYun/DataSchool">GitHub</a></li>
           </ol>
-        </div>
+        </blog-plugin>
       </div>
     </div>
   </div>
@@ -78,6 +78,7 @@ import useAxios from '/@app_modules/axios';
 import { RSP_RESULT } from '/@app_modules/axios';
 import Markdown from 'vue3-markdown-it';
 import { ref, reactive, computed, onMounted, ComputedRef} from 'vue';
+import BlogPlugin from '/@components/BlogPlugin.vue';
 
 const { axiosGet } = useAxios();
 type Post={id:number, date:string, post:string, title:string, type:string};
