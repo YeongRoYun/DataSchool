@@ -1,6 +1,8 @@
 # DataSchool
 During: 2022.06.27 -   
 by Data Campus
+# Review
+https://www.notion.so/korea-bear-family/ba237e3782b74b6aac35aeeee056b5e5
 ## Content
 ### 01. Python
 #### 06.27
